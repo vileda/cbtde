@@ -6,32 +6,10 @@
 #include <cstdio>
 
 #include "GameObject.hpp"
+#include "Eventable.hpp"
 
-enum class EventType {
-  UP,
-  DOWN,
-  PRESS
-};
-
-class MouseEvent {
-  public:
-    Vector2f pos;
-    EventType type;
-    enum class Button {
-      LEFT = GLFW_MOUSE_BUTTON_1
-    };
-};
-
-class KeyEvent {
-  public:
-    EventType type;
-    enum class Key {
-      ESC = GLFW_KEY_ESCAPE
-    };
-    Key key;
-};
-
-class GameApp
+class GameApp :
+  public Eventable
 {
   public:
     static GameApp& getInstance()
@@ -89,14 +67,18 @@ class GameApp
         std::cout << "world click: " << wpx << "," << wpy << std::endl;
       }
       GameApp::getInstance().last_mouse_action = action;
+      MouseEvent *evt = new MouseEvent();
+      GameApp::getInstance().onMouseEvent(evt);
     }
 
     void onMouseEvent(MouseEvent *evt) {
       assert(_rootGO != nullptr);
+      _rootGO->onMouseEvent(evt);
     }
 
     void onKeyEvent(KeyEvent *evt) {
       assert(_rootGO != nullptr);
+      _rootGO->onKeyEvent(evt);
       if (evt->key == KeyEvent::Key::ESC)
         glfwSetWindowShouldClose(window, GL_TRUE);
     }

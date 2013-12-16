@@ -5,11 +5,13 @@
 
 #include "Transformation.hpp"
 #include "Component.hpp"
+#include "Eventable.hpp"
 
 class GameApp;
 
 class GameObject :
-  public Transformation
+  public Transformation,
+  public Eventable
 {
 public:
     GameObject()
@@ -37,6 +39,14 @@ public:
       for(auto go : children) {
         onClickComponents(go->components, x, y);
       }
+    }
+
+    void onKeyEvent(KeyEvent *evt) {
+      std::cout << "onKeyEvent" << std::endl;
+    }
+
+    void onMouseEvent(MouseEvent *evt) {
+      std::cout << "onMouseEvent" << std::endl;
     }
 
     void addChild(GameObject *go) {
